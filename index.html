@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f5">
+  <title>拼一下 · 图片拼接</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./index.html" aria-label="拼一下首页"><span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i></span>拼一下<span class="brand-sub">图片拼接工作台</span></a>
+    <span class="local-badge"><span></span>本地处理，图片无需上传</span>
+  </header>
+  <main class="workspace">
+    <aside class="controls">
+      <div class="intro"><span class="eyebrow">MAKE SOMETHING TOGETHER</span><h1>好照片，拼在一起。</h1><p>选几张照片，把片刻组合成新的画面。</p></div>
+      <section class="control-section">
+        <div class="section-title"><h2><span>01</span>选择拼接方式</h2><span class="small-label" id="template-badge">斜切模板</span></div>
+        <div class="segmented" aria-label="图片数量"><button type="button" class="active" data-count="3" aria-pressed="true">3 张图片</button><button type="button" data-count="5" aria-pressed="false">5 张图片</button><button type="button" data-count="6" aria-pressed="false">6 张图片</button></div>
+        <div class="templates is-three" id="template-options" aria-label="拼接布局">
+          <button type="button" class="template active" data-layout="diagonal" aria-pressed="true"><span class="layout-icon diagonal-icon"><i></i><i></i><i></i></span><span>V 形斜切</span></button>
+          <button type="button" class="template" data-layout="parallel" aria-pressed="false"><span class="layout-icon parallel-icon"><i></i><i></i><i></i></span><span>平行斜切</span></button>
+          <button type="button" class="template" data-layout="hexagon" aria-pressed="false"><span class="layout-icon hexagon-icon"><i></i><i></i><i></i></span><span>六边形聚焦</span></button>
+          <button type="button" class="template" data-layout="fiveCenter" aria-pressed="false" hidden><span class="layout-icon five-icon"><i></i><i></i><i></i><i></i><i></i></span><span>中间梯形</span></button>
+          <button type="button" class="template" data-layout="sixCenter" aria-pressed="false" hidden><span class="layout-icon six-icon"><i></i><i></i><i></i><i></i><i></i><i></i></span><span>中心汇聚</span></button>
+        </div>
+        <p class="hint" id="template-hint">三块等面积，左右对称，使用规整的 V 形斜切。</p>
+      </section>
+      <section class="control-section">
+        <div class="section-title"><h2><span>02</span>添加图片</h2><button type="button" class="text-button" id="clear-button" disabled>清空</button></div>
+        <button type="button" class="upload-zone" id="upload-button"><span class="upload-symbol" aria-hidden="true">＋</span><strong>点击选择或拖入图片</strong><span>支持 JPG、PNG、WebP 等图片格式</span></button>
+        <input type="file" id="file-input" accept="image/*" multiple hidden>
+        <input type="file" id="replace-input" accept="image/*" hidden>
+        <div id="image-list" class="image-list" aria-label="已选图片"></div>
+        <p class="hint">用左右箭头调整顺序；点击缩略图可替换。</p>
+      </section>
+      <section class="control-section settings">
+        <div class="section-title"><h2><span>03</span>调整画布</h2><button type="button" class="text-button" id="reset-settings">重置</button></div>
+        <label class="field-label">画布比例</label>
+        <div class="ratio-options" aria-label="画布比例"><button type="button" data-ratio="3:4" aria-pressed="false">3:4</button><button type="button" data-ratio="1:1" aria-pressed="false">1:1</button><button type="button" data-ratio="4:3" class="active" aria-pressed="true">4:3</button><button type="button" data-ratio="wide" aria-pressed="false">宽幅</button><button type="button" data-ratio="custom" aria-pressed="false">自定义</button></div>
+        <div class="dimensions"><label>宽度 <span><input type="number" id="width-input" value="1200" min="100" max="6000" step="1" inputmode="numeric">px</span></label><span class="dimension-cross">×</span><label>高度 <span><input type="number" id="height-input" value="900" min="100" max="6000" step="1" inputmode="numeric">px</span></label></div>
+        <div class="range-heading"><label for="gap-input">图片间距</label><output id="gap-output" for="gap-input">12 px</output></div>
+        <input type="range" id="gap-input" min="0" max="80" value="12">
+        <div class="setting-row"><label for="fit-input">图片适配</label><select id="fit-input"><option value="cover">填满 · 居中裁切</option><option value="contain">完整显示</option></select></div>
+        <div class="setting-row"><label for="background-input">背景颜色</label><div class="color-control"><span id="color-value">#FFFFFF</span><input type="color" id="background-input" value="#ffffff"></div></div>
+      </section>
+      <div class="sidebar-note"><span aria-hidden="true">✦</span><p>每一张照片，都有它的位置。<br>让画面在斜线之间相遇。</p></div>
+    </aside>
+    <section class="preview-panel" aria-label="拼接预览">
+      <div class="preview-toolbar"><div><span class="preview-dot"></span><strong>画布预览</strong><span id="preview-size">1200 × 900 px</span></div><span class="preview-tag" id="layout-label">3 张 · V 形斜切</span></div>
+      <div class="preview-stage" id="preview-stage"><div class="canvas-wrap"><canvas id="preview-canvas" width="1200" height="900" aria-label="图片拼接预览，点击分区添加或替换图片"></canvas></div></div>
+      <div class="preview-caption"><span id="progress-label">已添加 0 / 3 张图片</span><span>拖入图片，或点击画布添加</span></div>
+      <footer class="export-bar"><div class="export-note"><strong>把这一刻保存下来</strong><span id="export-description">添加全部图片后，即可导出高清拼图</span></div><div class="export-actions"><label class="sr-only" for="format-input">导出格式</label><select id="format-input"><option value="png">PNG</option><option value="jpeg">JPG</option></select><button type="button" id="export-button" class="primary-button" disabled><span aria-hidden="true">↓</span>下载拼接图片</button></div></footer>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
