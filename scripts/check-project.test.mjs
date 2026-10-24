@@ -9,9 +9,9 @@ function fixture(t, files = {}) {
   const root = mkdtempSync(path.join(tmpdir(), 'image-stitcher-ci-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   for (const [name, content] of Object.entries({
-    'index.html': '<link href="styles.css"><canvas id="preview-canvas"></canvas><script src="app.js"></script>',
-    'app.js': '$("preview-canvas");',
-    'styles.css': 'body {}',
+    'index.html': '<link href="assets/css/styles.css"><canvas id="preview-canvas"></canvas><script src="assets/js/app.js"></script>',
+    'assets/js/app.js': '$("preview-canvas");',
+    'assets/css/styles.css': 'body {}',
     'README.md': '[许可证](LICENSE)',
     'LICENSE': 'MIT',
     ...files
@@ -40,7 +40,7 @@ test('missing page resource fails with the missing filename', t => {
 test('duplicate IDs and missing script lookup targets fail', t => {
   const root = fixture(t, {
     'index.html': '<div id="repeated"></div><div id="repeated"></div>',
-    'app.js': '$("missing-element");'
+    'assets/js/app.js': '$("missing-element");'
   });
   const errors = checkProject(root);
   assert.ok(errors.some(error => error.includes('重复') && error.includes('repeated')));

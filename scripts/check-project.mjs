@@ -16,7 +16,7 @@ function markdownFiles(directory) {
 export function checkProject(root = projectRoot) {
   const errors = [];
   const html = readFileSync(path.join(root, 'index.html'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
-  const script = readFileSync(path.join(root, 'app.js'), 'utf8');
+  const script = readFileSync(path.join(root, 'assets/js/app.js'), 'utf8');
   const ids = new Set();
 
   for (const match of html.matchAll(/\sid\s*=\s*(['"])(.*?)\1/gi)) {
@@ -26,7 +26,7 @@ export function checkProject(root = projectRoot) {
   }
 
   for (const match of script.matchAll(/\$\(\s*(['"])([^'"]+)\1\s*\)/g)) {
-    if (!ids.has(match[2])) errors.push(`app.js: 找不到页面元素「${match[2]}」。`);
+    if (!ids.has(match[2])) errors.push(`assets/js/app.js: 找不到页面元素「${match[2]}」。`);
   }
 
   function checkLocalFile(reference, source) {

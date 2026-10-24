@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '24'
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: node --check assets/js/app.js
       - name: Check project references
         run: node scripts/check-project.mjs
       - name: Test reference checker
