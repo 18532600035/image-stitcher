@@ -59,12 +59,26 @@ GIF 等动图导出为静态图片；HEIC 等格式能否读取取决于浏览�
 - `previews/`：五种模板的静态预览参考，页面运行不依赖这些图片。
 - `AGENTS.md`：AI 协作时的项目约定与验证要求。
 - `LICENSE`：MIT 开源许可证。
+- `.github/workflows/ci.yml`：GitHub Actions 自动检查。
+- `scripts/`：无需额外依赖的项目引用检查及检查器测试。
 
 全部使用原生 HTML / CSS / JavaScript，无外部依赖。
 
 ## 开发验证
 
-无需构建步骤。安装 Node.js 后可执行 `node --check app.js` 检查 JavaScript 语法；项目目前没有自动化测试套件。
+无需构建步骤。开发检查使用 Node.js 24，安装后在项目根目录执行：
+
+```sh
+node --check app.js
+node scripts/check-project.mjs
+node --test scripts/check-project.test.mjs
+```
+
+GitHub Actions 会在推送、创建或更新 PR 时执行上述检查，也支持在 Actions 页面手动运行。检查包含 JavaScript 语法、HTML 引用的本地资源、重复元素 ID、`app.js` 中字面量 `$("id")` 对应的元素，以及 Markdown 普通内联链接和图片引用的本地文件。外部网址和页面锚点不做联网或内容有效性检查。
+
+PR 的 Checks 区域会显示 `Project checks` 的结果；失败时点击详情查看错误。只有将此检查设为 `main` 分支保护的必需检查后，GitHub 才会强制阻止未通过检查的 PR 合并。协作时使用功能分支提交 PR，由另一位开发者审查后合并。
+
+当前 CI 是静态检查及检查器自身的测试，尚未包含图片加载、Canvas 绘制或导出的浏览器功能测试。
 
 修改后在浏览器中检查三种图片数量和五种布局、图片添加/替换/排序/清空、模式切换后的状态恢复、尺寸与间距调整，并分别导出 PNG/JPG 核对实际像素尺寸。修改几何计算时还需检查三拼等面积、斜边间距、凹多边形点击和两种适配方式。
 
